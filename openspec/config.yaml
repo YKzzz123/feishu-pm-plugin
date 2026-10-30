@@ -1,0 +1,52 @@
+schema: spec-driven
+
+context: |
+  Language: zh
+  All artifacts must be written in zh.
+  Keep OpenSpec structural headings and SHALL/MUST keywords in English.
+
+  Project: feishu-pm-plugin — 飞书「组」进展 Robot（FastAPI 主入口 + Hermes 记忆 + 可选插件）。
+  背景: docs/project-background.md
+  概念架构/权限/数据流: docs/architecture.md
+  Mentor 总览: docs/design-overview.md
+  实现架构+HTTP API+PG+幂等+Job payload: docs/tech-architecture-and-api.md
+  Hermes 插件约定: docs/hermes-plugin-conventions.md
+  官方插件文档: https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
+
+  入口(D13): 飞书 IM/事件直达 FastAPI；Hermes 非入口。
+  后端: FastAPI + PostgreSQL；绑定/读/diff/summary/审批/鉴权/飞书出站全在后端。
+  Hermes(D6/D17): **仅生成**文案；禁止 tool 绕过鉴权写飞书或 DB。
+  一群一项目(D4): chat_id→project_id；项目=组 Drive 根下文件夹；群成员可跨组。
+  组织: Group=Drive 根+人员池；Project=文件夹+周报/diff 锚点。
+  周报: 项目文件夹元数据 diff（D11）；空周仍提审（D10）。
+  权限: authorize(user, project, action) + 写前**项目文件夹** ACL。
+  Job/SSE/幂等等: 见 tech-architecture-and-api.md。
+  骨架: InMemory group 中间层（P0）；目标态以 project API 为准。
+  用户侧: 周报审批(Y/N)、Drive 成员与文件、主动上传。
+  Robot 侧: Drive diff 总结；周提醒；周四汇总审批；通过后写 Wiki。
+  两大主功能: (1) 周四自动总结+审批 (2) 对话上传 Drive。
+  非目标(当前): 完整自研 PM 套件、SaaS 多租户后台、Jira 深度同步、重型审批引擎。
+  进行中 change 示例: add-hermes-plugin-skeleton（P0：pm_health + pm_list_my_groups +
+    InMemory group-middleware；无飞书写/FastAPI/SSE 服务端）。
+
+rules:
+  proposal:
+    - 用中文写清用户价值与范围；明确 Non-goals
+    - 说明是否触及中间层（权限/一对多映射）、IM 入口、记忆隔离或仅插件 tool/cron
+  specs:
+    - Requirements 使用 SHALL/MUST；场景用 WHEN/THEN
+    - 涉及写飞书资源时必须写明审批或确认行为
+  design:
+    - 写明 FastAPI 入口边界、Hermes 记忆/意图边界、中间层 API 边界
+    - 一对多下说明 chat→project、项目文件夹与 authorize(user,project,action)
+  tasks:
+    - 任务可独立验证；写操作与权限相关任务单独列出
+
+operations:
+  apply:
+    guidance:
+      - 业务写路径进 Backend；避免修改 Hermes 核心；插件保持薄
+      - 不把密钥写入仓库；测试使用 mock/沙箱
+  archive:
+    guidance:
+      - 归档前确认 docs/ 与主 specs 已同步关键行为
