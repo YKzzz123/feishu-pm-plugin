@@ -1,0 +1,9 @@
+name: feishu-pm-plugin
+version: 0.1.0
+description: >
+  Feishu project-management Robot plugin for Hermes (P0 skeleton):
+  health check and list groups for the current Feishu user via in-memory
+  group middleware. No real Feishu writes.
+provides_tools:
+  - pm_health
+  - pm_list_my_groups

@@ -1,0 +1,16 @@
+[project]
+name = "feishu-pm-plugin"
+version = "0.1.0"
+description = "Hermes plugin skeleton for Feishu group PM robot"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.0",
+  "PyYAML>=6.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
